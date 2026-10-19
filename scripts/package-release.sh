@@ -28,7 +28,7 @@ elif [ "$arch" = "x86_64" ]; then
   }
   intel_python -c 'import platform, pywhispercpp.model; assert platform.machine() == "x86_64"'
   set --
-  for dylib in .venv/lib/python3.12/site-packages/libwhisper*.dylib .venv/lib/python3.12/site-packages/libggml*.dylib; do
+  for dylib in "$desktop_dir"/.venv/lib/python3.12/site-packages/libwhisper*.dylib "$desktop_dir"/.venv/lib/python3.12/site-packages/libggml*.dylib; do
     [ -f "$dylib" ] || continue
     set -- "$@" --add-binary "$dylib:."
   done
