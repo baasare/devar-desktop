@@ -606,6 +606,38 @@ def main() -> None:
                     name="devar-prepare",
                     daemon=True,
                 ).start()
+            elif action == "set-bible-directory":
+                directory = Path(command["path"]).expanduser()
+                if not directory.is_dir():
+                    raise FileNotFoundError("The selected Bible data folder is not available.")
+                os.environ["DEVAR_BIBLE_DIR"] = str(directory)
+                selected_translation = command.get("translation", "NKJV")
+
+                def prepare_after_selection():
+                    try:
+                        while _preparing:
+                            time.sleep(0.1)
+                        load_bible(selected_translation)
+                        if _transcriber is None and _whisper_model is None:
+                            prepare_runtime(selected_translation)
+                            return
+                        if platform.machine().lower() not in {"x86_64", "amd64"}:
+                            threading.Thread(
+                                target=prepare_semantic_search,
+                                args=(selected_translation,),
+                                name="devar-semantic-index",
+                                daemon=True,
+                            ).start()
+                        emit("state", state="prepared")
+                    except Exception as exc:
+                        emit("state", state="error")
+                        emit("error", message=str(exc))
+
+                threading.Thread(
+                    target=prepare_after_selection,
+                    name="devar-prepare-selected-bible",
+                    daemon=True,
+                ).start()
             elif action == "pause":
                 stop_listening("paused")
             elif action == "stop":

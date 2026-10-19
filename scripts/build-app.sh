@@ -116,7 +116,7 @@ case "$swift_arch" in
     ;;
 esac
 
-if [ "${DEVAR_SKIP_DMG:-0}" != "1" ] && [ -n "${DEVAR_PACKAGE_HELPER_DIR:-}" ] && [ -n "${DEVAR_BIBLE_SOURCE_DIR:-}" ]; then
+if [ "${DEVAR_SKIP_DMG:-0}" != "1" ] && [ -n "${DEVAR_PACKAGE_HELPER_DIR:-}" ]; then
   stage="$desktop_dir/.build/dmg-$swift_arch"
   artifact="$dist/Devar-$architecture_name.dmg"
   rm -rf "$stage"
@@ -124,24 +124,27 @@ if [ "${DEVAR_SKIP_DMG:-0}" != "1" ] && [ -n "${DEVAR_PACKAGE_HELPER_DIR:-}" ] &
   ditto "$app" "$stage/Devar.app"
   ln -s /Applications "$stage/Applications"
   cat > "$stage/$install_note" <<NOTES
-Devar private Mac test build
+Devar Desktop for macOS
 
 1. Drag Devar.app to Applications.
 2. Open Devar from Applications or Spotlight. If macOS warns that it cannot
    verify the developer, Control-click Devar and choose Open.
 3. Allow microphone access when asked.
-4. On first launch, keep the Mac online while Devar downloads $model_note.
+4. In Settings → Suggestions, choose a folder containing your licensed Bible
+   JSON file (for example, nkjv.json). Bible text is not included.
+5. On first launch, keep the Mac online while Devar downloads $model_note.
    Later launches use the local cached files.
 $search_note
 
 This build is for $architecture_note running macOS 15 or later. It is ad hoc signed
-and is not notarized. Do not redistribute it.
+and is not notarized. On first open, Control-click Devar and choose Open if
+macOS blocks the app. Translation data must be obtained and used under its own license.
 NOTES
   rm -f "$artifact"
   hdiutil create -volname "$volume_name" -srcfolder "$stage" -ov -format UDZO "$artifact"
   echo "Created $artifact"
 elif [ "${DEVAR_SKIP_DMG:-0}" != "1" ]; then
-  echo "Skipped portable DMG: a bundled speech helper and approved Bible files are required. Use scripts/build-app.sh --friend-test-both for both test packages."
+  echo "Skipped portable DMG: a bundled speech helper is required."
 fi
 
 if [ "${DEVAR_OPEN_AFTER_BUILD:-1}" = "1" ]; then

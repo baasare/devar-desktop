@@ -21,8 +21,10 @@ Devar does not replace your presentation software or project verses for you.
 
 > **Project status:** early, open-source macOS prototype. It targets macOS 15 or
 > later and supports Apple silicon and Intel with separate speech runtimes.
-> There is no public installer yet. Bible files have separate translation
-> licenses and are not included in this repository or public releases.
+> Download separate Apple silicon and Intel DMGs from
+> [GitHub Releases](https://github.com/baasare/devar-desktop/releases). Bible
+> files have separate translation licenses and are not included in this
+> repository or public releases.
 
 ## What it does
 
@@ -46,6 +48,24 @@ Devar Engine provides keyword search; compatible development builds can add
 EmbeddingGemma semantic ranking and direct-reference tracking. On Intel, it uses
 a CPU Whisper.cpp fallback and keyword search; semantic ranking is not available.
 Model downloads happen during app setup, not when you press **Start listening**.
+
+## Install a release
+
+Download the DMG matching your Mac from
+[GitHub Releases](https://github.com/baasare/devar-desktop/releases/latest),
+drag Devar to Applications, and open it. These builds are ad hoc signed and
+not notarized; if macOS blocks the first launch, Control-click Devar and choose
+**Open**. Allow microphone access when prompted.
+
+Devar does not include Bible translation text. In **Settings → Suggestions**,
+choose a folder containing the Bible JSON files you are licensed to use. Files
+should be named for their translation, such as `nkjv.json` or `niv.json`, and
+use objects with `book`, `chapter`, `verse`, and `text` fields. The selected
+folder is saved on your Mac.
+
+The first launch downloads the local speech model and may take a few minutes.
+Later starts use the downloaded model. Press **Start listening** after the
+app reports that setup is ready.
 
 ## Try the prototype from source
 
@@ -111,7 +131,12 @@ DEVAR_BIBLE_SOURCE_DIR=/path/to/approved/bibles scripts/package-intel-friend-tes
 
 Both packages are ad hoc signed and not notarized. macOS may require you to
 Control-click the app and choose **Open**. The binaries are intended for local
-testing; public distribution requires a release process and translation rights.
+testing; public release DMGs are built without Bible files.
+
+To publish a version, push a `v*` tag (for example `v0.2.0`). GitHub Actions
+builds separate Apple silicon and Intel DMGs and attaches both to a GitHub
+Release. The public builds use the released `devar-engine` keyword search and
+do not include licensed translation data.
 
 ## Privacy and permissions
 

@@ -337,6 +337,7 @@ final class DesktopSession {
     var translation = UserDefaults.standard.string(forKey: "desktopTranslation") ?? "NKJV" {
         didSet { UserDefaults.standard.set(translation, forKey: "desktopTranslation") }
     }
+    var bibleDirectory = UserDefaults.standard.string(forKey: "bibleDirectory") ?? ""
     var suggestionCount = UserDefaults.standard.integer(forKey: "desktopSuggestionCount") {
         didSet { UserDefaults.standard.set(suggestionCount, forKey: "desktopSuggestionCount") }
     }
@@ -438,6 +439,27 @@ final class DesktopSession {
         currentSuggestion = nil
         alternatives = []
         modelProgress = nil
+    }
+
+    func chooseBibleDirectory() {
+        guard state != .listening, state != .paused else {
+            errorMessage = "Stop listening before changing the Bible data folder."
+            return
+        }
+        let panel = NSOpenPanel()
+        panel.title = "Choose Bible Data Folder"
+        panel.message = "Choose a folder containing licensed Bible JSON files, such as nkjv.json."
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = false
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        bibleDirectory = url.path
+        UserDefaults.standard.set(bibleDirectory, forKey: "bibleDirectory")
+        modelReady = false
+        errorMessage = nil
+        state = .loadingData
+        bridge?.send(["action": "set-bible-directory", "path": bibleDirectory, "translation": translation])
     }
 
     func copy(_ value: String) {
@@ -570,7 +592,10 @@ private final class LocalBridge {
         }
         var environment = ProcessInfo.processInfo.environment
         if isPackaged, let resources {
-            environment["DEVAR_BIBLE_DIR"] = resources.appendingPathComponent("Bibles", isDirectory: true).path
+            let bundledBibleDirectory = resources.appendingPathComponent("Bibles", isDirectory: true).path
+            if FileManager.default.fileExists(atPath: bundledBibleDirectory) {
+                environment["DEVAR_BIBLE_DIR"] = bundledBibleDirectory
+            }
             if let packagedHelper {
                 let helperDirectory = packagedHelper.deletingLastPathComponent()
                 let bundledLibraries = [
@@ -582,6 +607,10 @@ private final class LocalBridge {
             }
         } else {
             environment["DEVAR_REPO_ROOT"] = projectRoot.deletingLastPathComponent().deletingLastPathComponent().path
+        }
+        if let savedBibleDirectory = UserDefaults.standard.string(forKey: "bibleDirectory"),
+           !savedBibleDirectory.isEmpty {
+            environment["DEVAR_BIBLE_DIR"] = savedBibleDirectory
         }
         process.environment = environment
         process.standardInput = input
@@ -941,6 +970,10 @@ private struct SettingsView: View {
 
     private var suggestionSettings: some View {
         Section("Bible suggestions") {
+            LabeledContent("Bible data folder", value: session.bibleDirectory.isEmpty ? "Not selected" : URL(fileURLWithPath: session.bibleDirectory).lastPathComponent)
+            Button("Choose Bible data folder…", systemImage: "folder") { session.chooseBibleDirectory() }
+            Text("Choose a folder containing licensed Bible JSON files named by translation, such as nkjv.json. Bible text is not included with Devar.")
+                .font(.callout).foregroundStyle(.secondary)
             Picker("Default translation", selection: $session.translation) {
                 Text("KJV").tag("KJV")
                 Text("NIV").tag("NIV")
@@ -956,8 +989,6 @@ private struct SettingsView: View {
                 Text("Stop and restart listening to apply changed suggestion settings.")
                     .font(.callout).foregroundStyle(.secondary)
             }
-            Text("This development build reads Bible datasets from the repository. Translation redistribution rights must be confirmed before shipping.")
-                .font(.callout).foregroundStyle(.secondary)
         }
     }
 
