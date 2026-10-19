@@ -1,6 +1,8 @@
 .build/
 .venv/
 dist/
+windows/**/bin/
+windows/**/obj/
 __pycache__/
 *.pyc
 .DS_Store

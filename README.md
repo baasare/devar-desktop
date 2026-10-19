@@ -19,9 +19,10 @@ surfaces likely Bible references beside the apps your team already uses. Review
 the match, copy the reference or verse, and paste it into your presentation.
 Devar does not replace your presentation software or project verses for you.
 
-> **Project status:** early, open-source macOS prototype. It targets macOS 15 or
-> later and supports Apple silicon and Intel with separate speech runtimes.
-> Download separate Apple silicon and Intel DMGs from
+> **Project status:** open-source desktop prototype. The macOS app targets
+> macOS 15 or later and supports Apple silicon and Intel. A Windows x64
+> companion is under active development. Download separate Apple silicon and
+> Intel DMGs from
 > [GitHub Releases](https://github.com/baasare/devar-desktop/releases). Bible
 > files have separate translation licenses and are not included in this
 > repository or public releases.
@@ -46,7 +47,8 @@ Devar does not replace your presentation software or project verses for you.
 On Apple silicon, the prototype uses Moonshine Streaming. The current released
 Devar Engine provides keyword search; compatible development builds can add
 EmbeddingGemma semantic ranking and direct-reference tracking. On Intel, it uses
-a CPU Whisper.cpp fallback and keyword search; semantic ranking is not available.
+a CPU Whisper.cpp fallback and keyword search. The Windows x64 app uses the
+same local Whisper.cpp fallback; see [the Windows build notes](windows/README.md).
 Model downloads happen during app setup, not when you press **Start listening**.
 
 ## Install a release
@@ -134,9 +136,9 @@ Control-click the app and choose **Open**. The binaries are intended for local
 testing; public release DMGs are built without Bible files.
 
 To publish a version, push a `v*` tag (for example `v0.2.0`). GitHub Actions
-builds separate Apple silicon and Intel DMGs and attaches both to a GitHub
-Release. The public builds use the released `devar-engine` keyword search and
-do not include licensed translation data.
+builds separate Apple silicon and Intel DMGs plus a portable Windows x64 ZIP
+and attaches them to a GitHub Release. The public builds use the released
+`devar-engine` keyword search and do not include licensed translation data.
 
 ## Privacy and permissions
 

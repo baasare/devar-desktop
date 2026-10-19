@@ -66,6 +66,19 @@ def bible_path(translation: str) -> Path | None:
     return candidate if candidate.is_file() else None
 
 
+def support_directory(*parts: str) -> Path:
+    """Return the per-user data directory on the current desktop platform."""
+    if sys.platform == "win32":
+        base = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
+    elif sys.platform == "darwin":
+        base = Path.home() / "Library" / "Application Support"
+    else:
+        base = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local" / "share"))
+    result = base / "Devar" / Path(*parts)
+    result.mkdir(parents=True, exist_ok=True)
+    return result
+
+
 def load_bible(translation: str):
     global _bible, _translation, _semantic_index, _semantic_index_translation, _reference_lookup
     from devar_engine.suggestions import BibleIndex
@@ -114,7 +127,7 @@ def prepare_semantic_search(translation: str | None = None) -> None:
                 if path is None:
                     raise FileNotFoundError(f"{selected} Bible data is unavailable for semantic search.")
                 bible = BibleIndex(path)
-            cache_dir = Path.home() / "Library" / "Application Support" / "Devar" / "VerseIndex"
+            cache_dir = support_directory("VerseIndex")
             index = SemanticBibleIndex(
                 bible,
                 _semantic_embedder,
@@ -274,8 +287,12 @@ def prepare_runtime(translation: str) -> None:
         emit("state", state="loading-data")
         load_bible(translation)
         is_intel = platform.machine().lower() in {"x86_64", "amd64"}
-        if is_intel:
-            emit("notice", message="Semantic verse search is unavailable on Intel Macs. Direct references and keyword suggestions remain available.")
+        is_windows = sys.platform == "win32"
+        if is_intel or is_windows:
+            if is_windows:
+                emit("notice", message="Windows uses local Whisper.cpp CPU transcription. Semantic verse search depends on a Windows-compatible Devar Engine runtime.")
+            else:
+                emit("notice", message="Semantic verse search is unavailable on Intel Macs. Direct references and keyword suggestions remain available.")
         else:
             threading.Thread(
                 target=prepare_semantic_search,
@@ -284,11 +301,10 @@ def prepare_runtime(translation: str) -> None:
                 daemon=True,
             ).start()
         emit("state", state="loading-model")
-        if is_intel:
+        if is_intel or is_windows:
             from pywhispercpp.model import Model
 
-            model_dir = Path.home() / "Library" / "Application Support" / "Devar" / "WhisperModels"
-            model_dir.mkdir(parents=True, exist_ok=True)
+            model_dir = support_directory("WhisperModels")
             _whisper_model = Model(
                 "tiny.en",
                 models_dir=str(model_dir),
@@ -621,7 +637,7 @@ def main() -> None:
                         if _transcriber is None and _whisper_model is None:
                             prepare_runtime(selected_translation)
                             return
-                        if platform.machine().lower() not in {"x86_64", "amd64"}:
+                        if sys.platform != "win32" and platform.machine().lower() not in {"x86_64", "amd64"}:
                             threading.Thread(
                                 target=prepare_semantic_search,
                                 args=(selected_translation,),

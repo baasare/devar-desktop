@@ -36,17 +36,38 @@ jobs:
           path: dist/${{ matrix.artifact }}
           if-no-files-found: error
 
+  build-windows:
+    name: Build Windows x64 package
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Build portable Windows app package
+        shell: pwsh
+        run: ./windows/build.ps1
+      - name: Upload Windows package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows x64
+          path: dist/Devar-Windows-x64.zip
+          if-no-files-found: error
+
   publish:
     name: Publish GitHub release
-    needs: build
+    needs: [build, build-windows]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
           path: release-assets
           merge-multiple: true
-      - name: Publish both DMGs
+      - name: Publish desktop downloads
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-        run: gh release create "$GITHUB_REF_NAME" release-assets/*.dmg --generate-notes
+        run: gh release create "$GITHUB_REF_NAME" release-assets/* --generate-notes

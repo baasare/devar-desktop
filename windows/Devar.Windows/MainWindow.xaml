@@ -1,0 +1,70 @@
+<Window x:Class="Devar.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Devar" Width="390" Height="610" MinWidth="350" MinHeight="470"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="CanResizeWithGrip" ShowInTaskbar="False" Topmost="True">
+  <Border Background="{StaticResource PanelBrush}" CornerRadius="18" BorderBrush="#B8B8BE" BorderThickness="1" Padding="18">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+      <Grid Grid.Row="0" MouseLeftButtonDown="Header_MouseLeftButtonDown" Margin="0,0,0,12">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="48"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <Border Width="42" Height="42" CornerRadius="12" Background="#DAE5F7" VerticalAlignment="Center">
+          <TextBlock Text="❞" FontSize="27" Foreground="#42464E" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="9,0">
+          <TextBlock Text="Devar" FontSize="19" FontWeight="SemiBold" Foreground="#303137" />
+          <TextBlock x:Name="StatusText" Text="Starting local speech service…" FontSize="12" Foreground="#686970" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+        <Button Grid.Column="2" Content="—" Width="34" Click="Minimize_Click" ToolTip="Minimize to tray" />
+      </Grid>
+      <Border Grid.Row="1" Background="#E5E5E9" CornerRadius="12" Padding="12,9" Margin="0,0,0,12">
+        <TextBlock x:Name="NoticeText" Text="Ready when you are" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="#45464C" />
+      </Border>
+      <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+          <TextBlock Text="LIVE TRANSCRIPT" FontSize="12" FontWeight="Bold" CharacterSpacing="110" Foreground="#686970" Margin="1,4,0,5" />
+          <TextBlock x:Name="TranscriptText" Text="Your live transcript will appear here." FontSize="15" Foreground="#5C5D63" TextWrapping="Wrap" MaxHeight="48" />
+          <TextBlock Text="SUGGESTED VERSE" FontSize="12" FontWeight="Bold" CharacterSpacing="110" Foreground="#686970" Margin="1,18,0,8" />
+          <Border Background="White" CornerRadius="14" Padding="14" MinHeight="130">
+            <StackPanel>
+              <DockPanel>
+                <Button x:Name="CopyReferenceButton" DockPanel.Dock="Right" Content="Copy ref" Click="CopyReference_Click" IsEnabled="False" />
+                <TextBlock x:Name="ReferenceText" Text="No passage yet" FontSize="19" FontWeight="SemiBold" Foreground="#35363B" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+              </DockPanel>
+              <TextBlock x:Name="VerseText" Text="Scripture matches will appear here." FontFamily="Georgia" FontSize="15" Foreground="#505158" TextWrapping="Wrap" MaxHeight="130" Margin="0,7,0,4" />
+              <Button x:Name="CopyVerseButton" Content="Copy verse" HorizontalAlignment="Left" Click="CopyVerse_Click" IsEnabled="False" />
+            </StackPanel>
+          </Border>
+          <TextBlock Text="OTHER POSSIBILITIES" FontSize="12" FontWeight="Bold" CharacterSpacing="110" Foreground="#686970" Margin="1,15,0,6" />
+          <ItemsControl x:Name="AlternativesList">
+            <ItemsControl.ItemTemplate><DataTemplate>
+              <Button HorizontalContentAlignment="Left" Click="Alternative_Click" Tag="{Binding}">
+                <StackPanel><TextBlock Text="{Binding Reference}" FontWeight="SemiBold"/><TextBlock Text="{Binding Text}" TextTrimming="CharacterEllipsis" MaxWidth="310" Foreground="#686970"/></StackPanel>
+              </Button>
+            </DataTemplate></ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </ScrollViewer>
+      <Border Grid.Row="3" Background="#E8E8EB" CornerRadius="12" Padding="10" Margin="0,12,0,9">
+        <StackPanel>
+          <DockPanel Margin="0,0,0,6"><TextBlock Text="Audio input" VerticalAlignment="Center"/><Button DockPanel.Dock="Right" Content="↻" Padding="8,4" Click="Refresh_Click" ToolTip="Refresh audio inputs"/></DockPanel>
+          <ComboBox x:Name="DevicePicker" DisplayMemberPath="Name" SelectedValuePath="Id" Height="32" />
+          <DockPanel Margin="0,7,0,0"><TextBlock Text="Translation" VerticalAlignment="Center"/><ComboBox x:Name="TranslationPicker" Width="112" Height="30" Margin="10,0,0,0" SelectedIndex="0"><ComboBoxItem Content="NKJV"/><ComboBoxItem Content="KJV"/><ComboBoxItem Content="NIV"/><ComboBoxItem Content="NLT"/></ComboBox></DockPanel>
+          <DockPanel Margin="0,8,0,0">
+            <Button x:Name="StopButton" DockPanel.Dock="Right" Content="■ Stop" Click="Stop_Click" IsEnabled="False" />
+            <Button x:Name="StartButton" Content="🎙  Start listening" Background="{StaticResource AccentBrush}" Foreground="White" FontWeight="SemiBold" Click="Start_Click" />
+          </DockPanel>
+          <Button Content="Choose Bible data folder…" HorizontalAlignment="Left" Padding="6,4" Click="ChooseBible_Click" />
+        </StackPanel>
+      </Border>
+      <DockPanel Grid.Row="4">
+        <Button Content="Quit Devar" DockPanel.Dock="Right" Click="Quit_Click" Padding="7,4" />
+        <TextBlock x:Name="EngineText" Text="Local speech · local scripture search" Foreground="#72737A" FontSize="11" VerticalAlignment="Center" />
+      </DockPanel>
+    </Grid>
+  </Border>
+</Window>

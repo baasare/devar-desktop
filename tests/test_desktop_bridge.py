@@ -5,6 +5,8 @@ import os
 import time
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 
 BRIDGE_PATH = Path(__file__).parents[1] / "Sources/DevarDesktop/Resources/desktop_bridge.py"
@@ -22,6 +24,12 @@ class VerseSuggestionTests(unittest.TestCase):
             "and then reminded us God so loved the world",
         )
         self.assertEqual(result, "The preacher said John three sixteen and then reminded us God so loved the world")
+
+    def test_windows_runtime_files_use_local_app_data(self):
+        with TemporaryDirectory() as data_dir, patch.dict(os.environ, {"LOCALAPPDATA": data_dir}), patch.object(bridge.sys, "platform", "win32"):
+            result = bridge.support_directory("WhisperModels")
+            self.assertEqual(result, Path(data_dir) / "Devar" / "WhisperModels")
+            self.assertTrue(result.is_dir())
 
     def test_quote_ranks_exact_kjv_passage_first(self):
         bridge.load_bible("KJV")
