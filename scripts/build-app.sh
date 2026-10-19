@@ -66,7 +66,8 @@ done
 rm "$iconset/source.png"
 iconutil -c icns "$iconset" -o "$app/Contents/Resources/Devar.icns"
 rm -rf "$iconset"
-cat > "$app/Contents/Info.plist" <<'PLIST'
+app_version="${DEVAR_APP_VERSION:-0.1.0}"
+cat > "$app/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -77,8 +78,8 @@ cat > "$app/Contents/Info.plist" <<'PLIST'
   <key>CFBundleExecutable</key><string>DevarDesktop</string>
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>CFBundleIconFile</key><string>Devar</string>
-  <key>CFBundleVersion</key><string>0.1.0</string>
-  <key>CFBundleShortVersionString</key><string>0.1.0</string>
+  <key>CFBundleVersion</key><string>$app_version</string>
+  <key>CFBundleShortVersionString</key><string>$app_version</string>
   <key>LSMinimumSystemVersion</key><string>15.0</string>
   <key>NSHighResolutionCapable</key><true/>
   <key>LSUIElement</key><true/>

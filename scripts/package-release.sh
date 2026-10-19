@@ -22,8 +22,12 @@ if [ "$arch" = "arm64" ]; then
 elif [ "$arch" = "x86_64" ]; then
   .venv/bin/python -m pip install "devar-engine>=0.1.1,<0.2.0"
   .venv/bin/python -m pip install --no-binary pywhispercpp pywhispercpp==1.5.1
-  .venv/bin/python -c 'import platform, pywhispercpp.model; assert platform.machine() == "x86_64"'
-  .venv/bin/python -m PyInstaller \
+  intel_python() {
+    DYLD_LIBRARY_PATH="$desktop_dir/.venv/lib/python3.12/site-packages${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}" \
+      .venv/bin/python "$@"
+  }
+  intel_python -c 'import platform, pywhispercpp.model; assert platform.machine() == "x86_64"'
+  intel_python -m PyInstaller \
     --noconfirm --clean --onedir --console \
     --name DevarSpeech \
     --distpath .build/release-helper \
@@ -41,5 +45,9 @@ fi
 
 export DEVAR_PACKAGE_ARCH="$arch"
 export DEVAR_PACKAGE_HELPER_DIR="$desktop_dir/.build/release-helper/DevarSpeech"
+if [ -n "${GITHUB_REF_NAME:-}" ]; then
+  DEVAR_APP_VERSION="${GITHUB_REF_NAME#v}"
+  export DEVAR_APP_VERSION
+fi
 export DEVAR_OPEN_AFTER_BUILD=0
 scripts/build-app.sh
