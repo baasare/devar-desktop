@@ -4,6 +4,7 @@ import Observation
 import ServiceManagement
 import AppKit
 
+@MainActor
 enum BrandAssets {
     static let menuBarMark: NSImage = {
         guard let url = Bundle.module.url(forResource: "devar-logo-mark", withExtension: "png"),

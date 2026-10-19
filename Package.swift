@@ -10,7 +10,6 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "DevarDesktop",
-            exclude: ["Resources/__pycache__"],
             resources: [
                 .copy("Resources/desktop_bridge.py"),
                 .copy("Resources/devar-logo-mark.png"),
