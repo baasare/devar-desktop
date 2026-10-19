@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f5f3ee" />
+  <meta name="description" content="Devar is a local-first macOS menu bar companion that helps church media teams find scripture during a sermon without changing presentation software." />
+  <title>Devar Desktop — Scripture, within reach</title>
+  <link rel="icon" href="assets/devar-mark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <a class="brand" href="#top"><img src="assets/devar-mark.svg" alt="" width="38" height="38" /><span>devar<span class="brand-light"> desktop</span></span></a>
+    <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#privacy">Privacy</a><a class="nav-github" href="https://github.com/baasare/devar-desktop" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main id="main">
+    <section class="hero wrap" id="top">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="live-dot"></span> A companion for the service in progress</div>
+        <h1>Keep your workflow.<br /><em>Find the verse.</em></h1>
+        <p class="hero-lede">Devar listens along and brings likely scripture references to your Mac menu bar, so your media team can stay in the presentation tools they already know.</p>
+        <div class="hero-actions"><a class="button button-dark" href="https://github.com/baasare/devar-desktop" target="_blank" rel="noreferrer">Explore the open source project <span aria-hidden="true">↗</span></a><a class="button button-plain" href="#getting-started">Build from source <span aria-hidden="true">↓</span></a></div>
+        <div class="hero-meta"><span>macOS 15+</span><span>Apple silicon + Intel</span><span>Local processing</span></div>
+      </div>
+      <div class="demo-stage" aria-label="Illustration of a Devar scripture suggestion panel on macOS">
+        <div class="desktop-window">
+          <div class="window-top"><span class="window-dot red"></span><span class="window-dot yellow"></span><span class="window-dot green"></span><span class="window-title">Sunday service · Presentation</span><span class="window-action">•••</span></div>
+          <div class="slide-canvas"><div class="slide-kicker">TODAY'S MESSAGE</div><div class="slide-line line-long"></div><div class="slide-line line-medium"></div><div class="slide-line line-short"></div><div class="slide-rule"></div><div class="slide-note">Your presentation stays yours.</div></div>
+          <div class="fake-menubar"><span class="apple-mark">●</span><span>File</span><span>Edit</span><span>View</span><span>Window</span><div class="menu-spacer"></div><span class="sound-wave">▮▮▮</span><span class="menubar-pill"><img src="assets/devar-mark.svg" alt="" /> John 3:16</span><span>◉</span><span>Wi-Fi</span><span>4:18 PM</span></div>
+        </div>
+        <div class="suggestion-panel">
+          <div class="panel-head"><img src="assets/devar-mark.svg" alt="" /><div><strong>Devar</strong><small><span class="mini-live"></span> Listening · Soundboard input</small></div><button class="sliders" aria-label="Settings">☷</button></div>
+          <div class="transcript-label">LIVE TRANSCRIPT <span>now</span></div>
+          <p class="transcript">“He spoke about love, sacrifice, and the world…”</p>
+          <div class="verse-card"><div class="verse-head"><span>John 3:16</span><span class="translation">NKJV</span><span class="match-label">reference heard</span></div><p>Suggested passage</p><div class="verse-actions"><span>▣ Copy reference</span><span>☰ Copy verse</span></div></div>
+          <div class="alternatives"><span>OTHER POSSIBILITIES</span><div><b>1 John 4:9</b><i></i><small>Copy</small></div><div><b>Romans 5:8</b><i></i><small>Copy</small></div></div>
+          <div class="panel-controls"><span class="control-label">AUDIO INPUT</span><span class="select-control">Soundboard feed <b>⌄</b></span><span class="start-control"><span>Ⅱ</span> Pause listening</span><span class="control-foot">On-device · Copy when ready</span></div>
+        </div>
+        <div class="demo-caption"><span class="caption-spark">✳</span> A small panel. A familiar workflow. <span class="caption-note">Interface illustration</span></div>
+      </div>
+    </section>
+    <section class="trust-row"><div class="wrap trust-inner"><span>Made for the people behind the screen</span><span class="trust-separator"></span><span>Operator stays in control</span><span class="trust-separator"></span><span>Audio remains on your Mac</span></div></section>
+    <section class="workflow wrap" id="how-it-works">
+      <div class="section-intro"><span class="eyebrow">THE DESKTOP COMPANION</span><h2>From spoken reference<br />to ready-to-copy verse.</h2><p>Devar supports the live media workflow without taking over the service.</p></div>
+      <div class="steps">
+        <article class="step"><span class="step-number">01</span><div class="step-icon icon-audio" aria-hidden="true">≋</div><h3>Choose the feed</h3><p>Select a microphone or connected soundboard input. Devar listens only after the operator starts it.</p></article>
+        <article class="step"><span class="step-number">02</span><div class="step-icon icon-transcript" aria-hidden="true">⌁</div><h3>Catch the moment</h3><p>A rolling transcript helps Devar recognize a spoken reference or match quoted scripture.</p></article>
+        <article class="step"><span class="step-number">03</span><div class="step-icon icon-copy" aria-hidden="true">↗</div><h3>Review and copy</h3><p>Check the ranked passages, copy the reference or verse, and paste it into your presentation.</p></article>
+      </div>
+    </section>
+    <section class="privacy-section" id="privacy"><div class="wrap privacy-grid"><div><span class="eyebrow">A QUIETER KIND OF AI</span><h2>The sermon stays<br /><em>with your team.</em></h2></div><div class="privacy-copy"><p>Speech recognition and scripture search run on the Mac. Devar keeps only a short transcript window in memory while listening; it does not save recordings or full transcripts.</p><div class="privacy-points"><div><span>01</span><b>Nothing to sign into</b><small>No account or analytics in the companion.</small></div><div><span>02</span><b>Models downloaded once</b><small>Setup fetches model files from their upstream sources.</small></div><div><span>03</span><b>Copy is your choice</b><small>No automatic typing, clipboard writes, or slide changes.</small></div></div></div></div></section>
+    <section class="platform wrap"><div class="platform-heading"><span class="eyebrow">BUILT FOR MAC TODAY</span><h2>One menu bar.<br />Your whole service.</h2></div><div class="platform-detail"><div class="platform-card"><div class="chip chip-apple">M</div><div><h3>Apple silicon</h3><p>Moonshine streaming transcription and optional EmbeddingGemma semantic ranking, on device.</p></div></div><div class="platform-card"><div class="chip chip-intel">I</div><div><h3>Intel Mac</h3><p>CPU Whisper.cpp transcription with direct-reference and keyword scripture matching.</p></div></div><div class="roadmap-note"><span>ON THE HORIZON</span><p>A Windows companion is a later phase. Devar Desktop is currently macOS-only.</p></div></div></section>
+    <section class="get-started" id="getting-started"><div class="wrap start-grid"><div><span class="eyebrow">OPEN SOURCE · EARLY PROTOTYPE</span><h2>Come build a calmer<br />service workflow.</h2><p>Read the source, try the prototype, or help shape what comes next.</p><div class="start-buttons"><a class="button button-light" href="https://github.com/baasare/devar-desktop" target="_blank" rel="noreferrer">View Devar on GitHub <span aria-hidden="true">↗</span></a><a class="button button-outline" href="https://github.com/baasare/devar-desktop/blob/main/README.md#try-the-prototype-from-source" target="_blank" rel="noreferrer">Setup instructions <span aria-hidden="true">→</span></a></div></div><div class="terminal-card"><div class="terminal-top"><i></i><i></i><i></i><span>Terminal</span></div><pre><code><b>$</b> git clone github.com/baasare/devar-desktop<br /><b>$</b> cd devar-desktop<br /><b>$</b> scripts/setup-dev.sh<br /><b>$</b> DEVAR_BIBLE_PATH=… swift run<br /><br /><span class="terminal-green">Ready when you are.</span></code></pre><div class="terminal-foot"><span>SwiftUI</span><span>·</span><span>Python helper</span><span>·</span><span>Local models</span></div></div></div></section>
+  </main>
+  <footer class="site-footer wrap"><a class="brand" href="#top"><img src="assets/devar-mark.svg" alt="" width="32" height="32" /><span>devar<span class="brand-light"> desktop</span></span></a><span>Made for the people who make the service work.</span><div><a href="https://github.com/baasare/devar-desktop/blob/main/LICENSE">MIT License</a><a href="https://github.com/baasare/devar-desktop">GitHub ↗</a></div></footer>
+</body>
+</html>
