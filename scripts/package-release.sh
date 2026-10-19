@@ -27,6 +27,11 @@ elif [ "$arch" = "x86_64" ]; then
       .venv/bin/python "$@"
   }
   intel_python -c 'import platform, pywhispercpp.model; assert platform.machine() == "x86_64"'
+  set --
+  for dylib in .venv/lib/python3.12/site-packages/libwhisper*.dylib .venv/lib/python3.12/site-packages/libggml*.dylib; do
+    [ -f "$dylib" ] || continue
+    set -- "$@" --add-binary "$dylib:."
+  done
   intel_python -m PyInstaller \
     --noconfirm --clean --onedir --console \
     --name DevarSpeech \
@@ -37,6 +42,7 @@ elif [ "$arch" = "x86_64" ]; then
     --collect-all devar_engine \
     --collect-all sounddevice \
     --hidden-import=_pywhispercpp \
+    "$@" \
     Sources/DevarDesktop/Resources/desktop_bridge.py
 else
   echo "DMG builds require an Apple silicon or Intel Mac runner; found $arch." >&2
