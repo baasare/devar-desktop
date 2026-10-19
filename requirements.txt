@@ -1,4 +1,4 @@
 # Local speech and scripture helper. The released Devar engine remains the
 # source of truth for verse ranking.
-moonshine-voice==0.1.5
+moonshine-voice==0.1.5; platform_machine == "arm64"
 sounddevice>=0.5,<0.6

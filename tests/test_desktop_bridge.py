@@ -40,6 +40,10 @@ class VerseSuggestionTests(unittest.TestCase):
         self.assertEqual(event["suggestions"][0]["reference"], "John 3:16")
         self.assertEqual(event["suggestions"][0]["translation"], "KJV")
 
+    @unittest.skipUnless(
+        importlib.util.find_spec("devar_engine.references"),
+        "The released PyPI engine does not include live reference tracking yet.",
+    )
     def test_spoken_reference_bypasses_context_refresh_delay(self):
         from devar_engine.references import SpokenReferenceTracker
 
@@ -59,6 +63,10 @@ class VerseSuggestionTests(unittest.TestCase):
         self.assertEqual(event["suggestions"][0]["reference"], "Matthew 13:11")
         self.assertEqual(event["suggestions"][0]["translation"], "KJV")
 
+    @unittest.skipUnless(
+        importlib.util.find_spec("devar_engine.references"),
+        "The released PyPI engine does not include live reference tracking yet.",
+    )
     def test_compound_spoken_reference_is_promoted_immediately(self):
         from devar_engine.references import SpokenReferenceTracker
 
@@ -78,6 +86,10 @@ class VerseSuggestionTests(unittest.TestCase):
         event = json.loads(output.getvalue())
         self.assertEqual(event["suggestions"][0]["reference"], "Job 38:33")
 
+    @unittest.skipUnless(
+        importlib.util.find_spec("devar_engine.references"),
+        "The released PyPI engine does not include live reference tracking yet.",
+    )
     def test_new_reference_moves_ahead_of_older_reference_in_rolling_context(self):
         from devar_engine.references import SpokenReferenceTracker
 
@@ -102,6 +114,10 @@ class VerseSuggestionTests(unittest.TestCase):
         event = json.loads(second_output.getvalue())
         self.assertEqual(event["suggestions"][0]["reference"], "Job 38:33")
 
+    @unittest.skipUnless(
+        importlib.util.find_spec("devar_engine.references"),
+        "The released PyPI engine does not include live reference tracking yet.",
+    )
     def test_fresh_quote_can_replace_an_older_spoken_reference(self):
         from devar_engine.references import SpokenReferenceTracker
 

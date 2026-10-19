@@ -28,6 +28,22 @@ helper_dist="$package_root/pyinstaller-dist"
 rm -rf "$package_root"
 mkdir -p "$package_root"
 
+set --
+if .venv/bin/python -c 'import mlx, mlx_vlm' >/dev/null 2>&1; then
+  set -- \
+    --collect-all mlx \
+    --collect-all mlx_vlm \
+    --collect-data mlx_audio \
+    --hidden-import=mlx.core \
+    --hidden-import=mlx.nn \
+    --hidden-import=mlx_vlm.embedding_loader \
+    --hidden-import=mlx_vlm.models.embedding_gemma2 \
+    --hidden-import=mlx_vlm.models.embedding_gemma2.embedding_gemma2 \
+    --hidden-import=mlx_vlm.models.embedding_gemma2.config
+else
+  echo "EmbeddingGemma runtime is not installed; packaging keyword-search mode."
+fi
+
 .venv/bin/python -m PyInstaller \
   --noconfirm --clean --onedir --console \
   --name DevarSpeech \
@@ -36,15 +52,7 @@ mkdir -p "$package_root"
   --specpath "$package_root" \
   --collect-all moonshine_voice \
   --collect-all devar_engine \
-  --collect-all mlx \
-  --collect-all mlx_vlm \
-  --collect-data mlx_audio \
-  --hidden-import=mlx.core \
-  --hidden-import=mlx.nn \
-  --hidden-import=mlx_vlm.embedding_loader \
-  --hidden-import=mlx_vlm.models.embedding_gemma2 \
-  --hidden-import=mlx_vlm.models.embedding_gemma2.embedding_gemma2 \
-  --hidden-import=mlx_vlm.models.embedding_gemma2.config \
+  "$@" \
   Sources/DevarDesktop/Resources/desktop_bridge.py
 
 export DEVAR_PACKAGE_HELPER_DIR="$helper_dist/DevarSpeech"

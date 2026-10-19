@@ -134,7 +134,15 @@ def prepare_semantic_search(translation: str | None = None) -> None:
 def suggest(text: str, force: bool = False, reference_text: str | None = None) -> None:
     global _last_query, _last_suggested_at, _recent_text
     global _last_direct_references, _preferred_direct_reference
-    from devar_engine.semantic import hybrid_suggest
+
+    try:
+        from devar_engine.semantic import hybrid_suggest
+    except ImportError:
+        # The latest public PyPI release may predate optional semantic ranking.
+        # Keep keyword search usable until the matching engine release is available.
+        from devar_engine.suggestions import keyword_suggest
+
+        hybrid_suggest = None
 
     cleaned = " ".join(text.split()).strip()
     if len(cleaned) < 10 or (cleaned == _last_query and not force):
@@ -199,29 +207,28 @@ def suggest(text: str, force: bool = False, reference_text: str | None = None) -
     _recent_text = cleaned[-_context_chars:]
     if _bible is None:
         load_bible(_translation)
-    try:
-        matches = hybrid_suggest(
-            _bible,
-            _recent_text,
-            semantic_index=(
-                _semantic_index if _semantic_index_translation == _translation else None
-            ),
-            # Reference detection runs against the current utterance above.
-            # Searching the full rolling transcript for references would keep
-            # an old callout (for example, Matthew 13:11) ahead of fresh
-            # quote-based matches for too long.
-            include_references=False,
-            top_k=_suggestion_count,
-        )
-    except Exception as exc:
-        # Keep the live workflow available if a model/runtime fails mid-service.
-        emit("notice", message=f"Semantic search paused; using keyword matches. {exc}")
-        matches = hybrid_suggest(
-            _bible,
-            _recent_text,
-            include_references=False,
-            top_k=_suggestion_count,
-        )
+    if hybrid_suggest is None:
+        matches = keyword_suggest(_bible, _recent_text, top_k=_suggestion_count)
+    else:
+        try:
+            matches = hybrid_suggest(
+                _bible,
+                _recent_text,
+                semantic_index=(
+                    _semantic_index if _semantic_index_translation == _translation else None
+                ),
+                # Reference detection runs against the current utterance above.
+                # Searching the full rolling transcript for references would keep
+                # an old callout ahead of fresh quote-based matches for too long.
+                include_references=False,
+                top_k=_suggestion_count,
+            )
+        except Exception as exc:
+            # Keep the live workflow available if a model/runtime fails mid-service.
+            from devar_engine.suggestions import keyword_suggest
+
+            emit("notice", message=f"Semantic search paused; using keyword matches. {exc}")
+            matches = keyword_suggest(_bible, _recent_text, top_k=_suggestion_count)
     results = []
     for match in matches:
         verses = getattr(match, "verses", [])
@@ -330,9 +337,18 @@ def start_listening(device_index: int, translation: str, suggestion_count: int, 
     _active_text = ""
     _last_direct_references = set()
     _preferred_direct_reference = None
-    from devar_engine.references import SpokenReferenceTracker
+    try:
+        from devar_engine.references import SpokenReferenceTracker
 
-    _reference_tracker = SpokenReferenceTracker(context_ttl=max(45.0, float(context_seconds) * 2.0))
+        _reference_tracker = SpokenReferenceTracker(
+            context_ttl=max(45.0, float(context_seconds) * 2.0)
+        )
+    except ImportError:
+        _reference_tracker = None
+        emit(
+            "notice",
+            message="This Devar Engine version does not include live spoken-reference detection. Keyword scripture search remains available.",
+        )
     _suggestion_count = min(max(int(suggestion_count), 1), 10)
     _refresh_seconds = min(max(float(refresh_seconds), 1.0), 15.0)
     _context_chars = min(max(int(context_seconds), 10), 120) * 15

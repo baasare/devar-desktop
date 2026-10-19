@@ -31,19 +31,21 @@ Devar does not replace your presentation software or project verses for you.
 - Captures only the input device you select, such as a microphone or connected
   soundboard interface. It does not capture audio playing from other apps.
 - Shows a rolling two-line transcript and ranked scripture suggestions.
-- Recognizes spoken references such as “John, chapter three, verse sixteen” and
-  searches quoted wording when no reference is spoken.
+- Searches quoted scripture with the released engine's local keyword ranker.
+- Compatible development engine builds can add spoken-reference tracking and
+  EmbeddingGemma semantic ranking; those newer engine modules are not yet in
+  the current PyPI release.
 - Copies a reference or verse only when you choose a copy action.
 - Keeps audio and transcript context in memory; the app does not save sermon
   recordings or transcripts.
 - Runs transcription and verse search on your Mac after required models and a
   Bible dataset have been prepared.
 
-On Apple silicon, the current prototype uses Moonshine Streaming and optional
-EmbeddingGemma semantic ranking alongside direct-reference and keyword search.
-On Intel, it uses a CPU Whisper.cpp fallback and direct-reference/keyword search;
-semantic ranking is not available. Model downloads happen during app setup, not
-when you press **Start listening**.
+On Apple silicon, the prototype uses Moonshine Streaming. The current released
+Devar Engine provides keyword search; compatible development builds can add
+EmbeddingGemma semantic ranking and direct-reference tracking. On Intel, it uses
+a CPU Whisper.cpp fallback and keyword search; semantic ranking is not available.
+Model downloads happen during app setup, not when you press **Start listening**.
 
 ## Try the prototype from source
 
@@ -78,10 +80,12 @@ Then launch the native menu bar app:
 DEVAR_BIBLE_PATH=/absolute/path/to/bible.json swift run
 ```
 
-The first run prepares local speech and embedding models. Keep the Mac online
-while those files download. Choose an audio input, wait for readiness, then
-press **Start listening**. macOS will ask for microphone access. Listening
-starts only after you press Start, including when the app launches at login.
+The first run prepares local speech models. Keep the Mac online while those
+files download. Choose an audio input, wait for readiness, then press **Start
+listening**. macOS will ask for microphone access. Listening starts only after
+you press Start, including when the app launches at login. The released PyPI
+engine currently supports keyword scripture matching; newer reference tracking
+and semantic ranking require a compatible engine development build.
 
 ## Build a local app bundle
 

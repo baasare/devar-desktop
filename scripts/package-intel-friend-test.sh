@@ -28,7 +28,7 @@ intel_python() {
 }
 
 intel_python -m pip install --upgrade pip
-intel_python -m pip install pyinstaller==6.22.3 'sounddevice>=0.5,<0.6' 'devar-engine[embedding]>=0.2.0,<0.3.0'
+intel_python -m pip install pyinstaller==6.22.3 'sounddevice>=0.5,<0.6' 'devar-engine>=0.1.1,<0.2.0'
 intel_python -m pip install --no-binary pywhispercpp pywhispercpp==1.5.1
 intel_python -c 'import platform, sounddevice, devar_engine; assert platform.machine() == "x86_64"; import pywhispercpp.model; print("Intel helper dependencies are ready")'
 
