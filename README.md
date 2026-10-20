@@ -19,6 +19,12 @@ surfaces likely Bible references beside the apps your team already uses. Review
 the match, copy the reference or verse, and paste it into your presentation.
 Devar does not replace your presentation software or project verses for you.
 
+<p align="center">
+  <a href="https://baasare.github.io/devar-desktop/#launch-film">
+    <img src="site/assets/devar-launch.gif" alt="Devar desktop launch film" width="720" />
+  </a>
+</p>
+
 > **Project status:** early, open-source macOS prototype. It targets macOS 15 or
 > later and supports Apple silicon and Intel with separate speech runtimes.
 > Download separate Apple silicon and Intel DMGs from
